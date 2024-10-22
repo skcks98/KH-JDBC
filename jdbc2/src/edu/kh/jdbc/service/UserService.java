@@ -40,7 +40,7 @@ public class UserService {
 	}
 
 
-	/** USER 등록 서비스
+	/** 1.  USER 등록 서비스
 	 * @param user : 입력 받은 id, pw, name이 세팅된 객체
 	 * @return 삽입 성공한 결과 행의 개수
 	 */
@@ -54,7 +54,7 @@ public class UserService {
 		// 3. DAO 메서드 호출(INSERT) 후
 		// 결과(삽입 성공한 행 개수, int) 반환 받기
 		int result = dao.insertUser(conn, user);
-				commit(conn);
+				
 		
 		// 4. INSERT 수행 결과에 따라 트랜잭션 제어 처리
 		if(result > 0) { //INSERT성공
@@ -74,7 +74,7 @@ public class UserService {
 	}
 
 
-	/** User 전체 조회 서비스
+	/** 2. User 전체 조회 서비스
 	 * @return 조회된 User가 담긴 List
 	 */
 	public List<User> selectAll() throws Exception {
@@ -98,52 +98,169 @@ public class UserService {
 	}
 
 
-	/** User 이름 검색 조회 서비스
+	/** 3. User 이름 검색 조회 서비스
 	 * @return
 	 */
-	public List<User> selectByName(String input) throws Exception {
+	public List<User> selectName(String input) throws Exception {
+		Connection conn = getConnection();
 		
-		// 1. 커넥션 생성
-		Connection conn = JDBCTemplate.getConnection();
-				
-		// 2. 데이터 가공(없으면 넘어감)
-				
-		// 3. DAO 메서드 호출 후 결과 반환받기
-		
-		 List<User> userList = dao.selectByName(conn, input);
-		
-		// 4. 만약 DML인 경우 트랜잭션 처리
-		// 		SELECT 는 안해도 된다.
-				
-		// 5. Connection 반환
-		
+		List<User> searchList = dao.selectName(conn, input);
 		JDBCTemplate.close(conn);
-				
-		// 6. 결과 반환
-		return userList;
-		
+		return searchList;
 	}
 
 
-	/** USER_NO로 User 조회 서비스
-	 * @param userNo (USER_NO)
+	/** 4. USER_NO로 User 조회 서비스
+	 * @param input 입력한 사용자 번호
 	 * @return 일치하는 User 객체, 없으면 null
 	 */
-	public int selectByUserNo(int input) throws Exception {
-	    Connection conn = JDBCTemplate.getConnection();
+	public User selectUser(int input) throws Exception {
+	    // Connection 생성
+		Connection conn = getConnection();
 	    
-	    // DAO 호출
-	    User user = dao.selectByUserNo(conn, input);
+	    // DAO 호출 결과 반환
+	    User user = dao.selectUser(conn, input);
 	    
-	    JDBCTemplate.close(conn);
+	    // Connection 반환
+	    close(conn);
 	    
+	    // 결과 반환
 	    return user;
 	}
 
 
-	public int deleteByUserNo(int input) {
-		// TODO Auto-generated method stub
-		return null;
+	/** 5. USER_NO를 입력 받아 일치하는 User 삭제(DELETE)
+	 * @param input
+	 * @return result
+	 */
+	public int deleteUser(int input) throws Exception {
+
+		Connection conn = getConnection();
+		
+		int result = dao.deleteUser(conn, input);
+		
+		// 결과에 따라 트랜잭션 제어 처리
+		
+		if (result > 0) commit(conn);
+		else rollback(conn);
+		
+		close(conn);
+		
+		return result;
 	}
+
+
+	
+	/** 6. ID,PW 일치하는 회원의 USER_NO 조회 DAO
+	 * @param conn
+	 * @param userId
+	 * @param userPw
+	 * @return
+	 */
+	public int selectUserNo(String userId, String userPw) throws Exception {
+		
+		Connection conn = getConnection();
+		
+		// DAO 호출 후 결과 반환 받기
+		int userNo = dao.selectUser(conn, userId, userPw);
+		
+		close(conn);
+		
+		return userNo;
+	}
+
+
+	
+	
+	
+	/**  userNo가 일치하는 User의 이름 수정 서비스
+	 * @param userName
+	 * @param userNo
+	 * @return result
+	 * @throws Exception
+	 */
+	public int updateName(String userName, int userNo) throws Exception {
+		
+		Connection conn = getConnection();
+		
+		int result = dao.updateName(conn, userName, userNo);
+		
+		// 트랜잭션 제어
+		if(result > 0) commit(conn);
+		else		   rollback(conn);
+		
+		
+		
+		return result;
+	}
+
+
+	/** 7. 아이디 중복 확인 서비스
+	 * @param userId
+	 * @return count
+	 * @throws Exception
+	 */
+	public int idCheck(String userId) throws Exception{
+		
+		Connection conn = getConnection();
+		
+		int count = dao.idCheck(conn, userId);
+		
+		close(conn);
+		
+		return count;
+	}
+
+
+	/** 8.userList에 있는 모든 user INSERT 서비스
+	 * @param userList
+	 * @return result : 삽입된 행의 개수
+	 */
+	public int multiInsertUser(List<User> userList) throws Exception{
+		
+		Connection conn = getConnection();
+		
+		// 다중 INSERT 방법
+		// 1) SQL 을 이용한 다중 INSERT
+		// 2) JAVA 반복문을 이용한 다중 INSERT (이거 사용!)
+		
+		int count = 0; // 삽입 성공한 행의 개수 count
+		
+		// 1행씩 삽입
+		for(User user : userList) {
+			int result = dao.insertUser(conn, user);
+			count += result; // 삽입 성공한 행의 개수를 count에 누적			
+		}
+		
+		count--; // 강제 실패 처리
+		
+		
+		// 트랜잭션 제어 처리
+		// 전체 삽입 성공시 commit / 아니면 rollback(일부 삽입, 전체 실패)
+		
+		if(count == userList.size()) {
+			commit(conn);
+		} else {
+			rollback(conn);
+		}
+		
+		close(conn);
+		
+		
+		return count;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }
