@@ -232,7 +232,7 @@ public class UserService {
 			count += result; // 삽입 성공한 행의 개수를 count에 누적			
 		}
 		
-		count--; // 강제 실패 처리
+		// count--; // 강제 실패 처리
 		
 		
 		// 트랜잭션 제어 처리
