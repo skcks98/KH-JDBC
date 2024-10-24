@@ -1,0 +1,49 @@
+/* 테이블 스타일 지정 */
+#stdList {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#stdList td, #stdList th {
+  padding: 8px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+thead th {
+  background-color: skyblue;
+}
+
+/* 짝수번째 행 */
+tbody > tr:nth-of-type(2n) {
+  background-color: #f2f2f2; 
+}
+
+/* 테이블 행 hover 효과 */
+tbody > tr:hover {
+  background-color: #ddd;
+}
+
+/* 컨테이너 스타일 */
+.container {
+  width: 80%;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 버튼 스타일 */
+button {
+  padding: 10px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #218838;
+}

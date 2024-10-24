@@ -54,4 +54,76 @@ public class TodoListServiceImpl implements TodoListService{
 		
 		return result;
 	}
+
+	
+	@Override
+	public Todo todoDeatilView(int todoNo) throws Exception {
+		
+		Connection conn = getConnection();
+		
+		Todo todo = dao.todoDetailView(conn, todoNo);
+		
+		close(conn);
+		
+		
+		
+		
+		return todo;
+
+	}
+
+	
+	@Override
+	public int todoComplete(int todoNo) throws Exception {
+		
+		Connection conn = getConnection();
+		
+		int result = dao.todoComplete(conn,todoNo);
+		
+		// update 이니까 commit rollback
+		if(result > 0) commit(conn);
+		else		   rollback(conn);
+		
+		
+		close(conn);
+		
+		
+		return result;
+	}
+
+	
+	
+	@Override
+	public int todoUpdate(int todoNo, String title, String detail) throws Exception {
+		
+		Connection conn = getConnection();
+		
+		int result = dao.todoUpdate(conn,todoNo,title,detail);
+		
+		
+		// update 이니까 commit rollback
+		if(result > 0) commit(conn);
+		else		   rollback(conn);
+				
+				
+		close(conn);
+		
+		return result;
+	}
+
+	@Override
+	public int todoDelete(int todoNo) throws Exception {
+		
+		Connection conn = getConnection();
+		
+		int result = dao.todoDelete(conn,todoNo);
+		
+		// delete -  commit rollback
+		if(result > 0) commit(conn);
+		else		   rollback(conn);
+		
+		close(conn);
+		
+		return result;
+	}
 }
