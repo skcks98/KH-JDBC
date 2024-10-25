@@ -15,64 +15,78 @@
   <link rel="stylesheet" href="/resources/css/main.css">
 </head>
 <body>
-  <h1>학생관리 프로그램</h1>
-
-
-  
+  <h1>학생 목록</h1>
 
   <hr>
 
-  <%-- 학생 목록 출력 --%>
-  <table id="stdList" border="1">
-    <thead>
-      <tr>
-        <th>학생 번호</th> <!-- 페이지에서 보이는 용도의 단순 출력 번호 -->
-        <th>학생 이름</th> <!-- 실제 이 데이터의 todoNo 고유번호 -->
-        <th>학생 나이</th>
-        <th>학생 성별</th>
-        <th>학생 성적</th>
-      </tr>
-    </thead>
-  
-    <tbody>
-      <c:forEach items="${stdList}" varStatus="vs" var="std">
-        <tr>
-          <th>${std.stdNo}</th> <%-- 학생 번호 --%>
+	<div class="container">
+		<h1>학생 관리 시스템</h1>
 
-          <td>
-          	<%-- 학생 클릭 시
+		<div class="button-area">
+			<button id="addStudentBtn" class="add-btn">학생
+				추가</button>
+
+
+
+
+			<%-- 학생 목록 출력 --%>
+			<table id="stdList" border="1">
+				<thead>
+					<tr>
+						<th>학생 번호</th>
+						<!-- 페이지에서 보이는 용도의 단순 출력 번호 -->
+						<th>학생 이름</th>
+						<!-- 실제 이 데이터의 todoNo 고유번호 -->
+						<th>학생 나이</th>
+						<th>학생 성별</th>
+						<th>학생 성적</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<c:forEach items="${stdList}" varStatus="vs" var="std">
+						<tr>
+							<th>${std.stdNo}</th>
+							<%-- 학생 번호 --%>
+
+							<td>
+								<%-- 학생 클릭 시
           		인덱스 번호를 이용하여 stdList의 
           		인덱스 번째 요소 내용을 조회하기
           		
-          	 --%>
-            <a href="/std/detail?stdNo==${std.stdNo}">${std.stdName}</a>
-          </td> <%-- 학생 이름 --%>
-          
-		   <td>${std.stdAge}</td> <%-- 나이 --%>
-         
-           <td>${std.stdGender}</td> <%-- 성별 --%>
+          	 --%> <a href="/std/detail?stdNo=${std.stdNo}">${std.stdName}</a>
+							</td>
+							<%-- 학생 이름 --%>
 
-          <td>${std.stdScore}</td><%-- 성적 --%>
-        </tr>
-       </c:forEach>
-    </tbody>
-  </table>
-  
-  <%-- session 범위에 message가 있을 경우 --%>
-  <c:if test="${not empty sessionScope.message}">
-  	<script>
+							<td>${std.stdAge}</td>
+							<%-- 나이 --%>
+
+							<td>${std.stdGender}</td>
+							<%-- 성별 --%>
+
+							<td>${std.stdScore}</td>
+							<%-- 성적 --%>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+		</div>
+
+		<%-- session 범위에 message가 있을 경우 --%>
+		<c:if test="${not empty sessionScope.message}">
+			<script>
   		alert("${message}");
   		// JSP 해석 우선순위
   		// 1 순위 : Java(EL/JSTL)
   		// 2 순위 : Front(HTML,CSS,JS)
   	</script>
-  	
-  	<%-- message를 한 번만 출력하고 제거 --%>
-  	<c:remove var="message" scope="session"/>
-  </c:if>
+
+			<%-- message를 한 번만 출력하고 제거 --%>
+			<c:remove var="message" scope="session" />
+		</c:if>
 
 
-  <%-- JS 연결 --%>
-  <script src="/resources/js/main.js"></script>
+		<%-- JS 연결 --%>
+		<script src="/resources/js/main.js"></script>
 </body>
 </html>

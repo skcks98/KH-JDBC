@@ -1,9 +1,7 @@
 package edu.kh.stu.controller;
 
 import java.io.IOException;
-import java.util.List;
 
-import edu.kh.stu.dto.Student;
 import edu.kh.stu.service.stdListService;
 import edu.kh.stu.service.stdListServiceImpl;
 import jakarta.servlet.ServletException;
@@ -12,43 +10,42 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-//"/main" 요청을 매핑하여 처리하는 서블릿
-@WebServlet("/main")
-public class MainServlet extends HttpServlet{
+@WebServlet("/std/delete")
+public class DeleteServlet extends HttpServlet{
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-	
+		
 		try {
-			
-			// Service 객체 생성
-			// 요청 -> Controller -> Service -> DAO -> DB
-			// 응답 <- View <-  <-           <-     <-
+			int stdNo = Integer.parseInt(req.getParameter("stdNo"));
 			
 			stdListService service = new stdListServiceImpl();
+			int result = service.stdDelete(stdNo);
 			
-			List<Student> stdList = service.stdListFullView();
+			String url = null;
+			String message = null;
 			
-			// request scope 에 객체 값 추가하기
-			req.setAttribute("stdList", stdList);
-		
-						
-			// 메인 페이지 응답을 담당하는 jsp 에 요청 위임
-			String path = 
-					"/WEB-INF/views/main.jsp";
-			req.getRequestDispatcher(path).forward(req, resp);
+			if(result > 0) { // 삭제 성공
+				url = "/";
+				message = "학생이 삭제되었습니다";
+			} else { // 삭제 실패
+				url = "/std/detail?stdNo=" + stdNo;
+				message = "학생이 존재하지 않습니다";
+			}
 			
+			// session 객체에 속성 추가 
+			req.getSession().setAttribute("message", message);
 			
+			// redirect는 GET 방식 요청
+			resp.sendRedirect(url);
 			
 			
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		
-		
-		
+	
+	
 	}
 
 }

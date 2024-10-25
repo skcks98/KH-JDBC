@@ -13,4 +13,46 @@ public interface stdListService {
 	 */
 	List<Student> stdListFullView() throws Exception;
 
+	
+	
+	/** 학생 상세정보 출력
+	 * @param stdNo
+	 * @return
+	 * @throws Exception
+	 */
+	Student stdDetailView(int stdNo) throws Exception;
+
+
+
+	/** 학생 추가 
+	 * @param stdName
+	 * @param stdAge
+	 * @param stdGender
+	 * @param stdScore
+	 * @return
+	 * @throws Exception
+	 */
+	int stdAdd(String stdName, int stdAge, String stdGender, String stdScore) throws Exception;
+
+
+
+	/** 학생 상세정보 수정
+	 * @param stdNo
+	 * @param stdName
+	 * @param stdAge
+	 * @param stdGender
+	 * @param stdScore
+	 * @return
+	 * @throws Exception
+	 */
+	int stdUpdate(int stdNo, String stdName, int stdAge, String stdGender, String stdScore) throws Exception;
+
+
+
+	/** 학생 정보 삭제
+	 * @param stdNo
+	 * @return
+	 */
+	int stdDelete(int stdNo) throws Exception;
+
 }

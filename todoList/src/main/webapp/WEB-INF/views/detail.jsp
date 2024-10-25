@@ -45,6 +45,8 @@
       <button id="deleteBtn">삭제</button>
     </div>
   </div>
+  
+  
 
   <%-- session에 message가 있다면 --%>
   <c:if test="${not empty sessionScope.message}">

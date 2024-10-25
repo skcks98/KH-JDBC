@@ -268,19 +268,4 @@ public class TodoListDAOImpl implements TodoListDAO{
 	}
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }
